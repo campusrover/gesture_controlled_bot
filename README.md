@@ -1,6 +1,6 @@
-# Nazari and Helen's Seeing Eye Dog Repo
+# Nazari and Helen's Gesture Controlled Bot Repository
 
-### seeing_eye_robot repo
+### gesture_controlled_bot
 
 ## Project Description
 #### Most minimal version of the project, in a real ROS package
