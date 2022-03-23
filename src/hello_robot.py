@@ -3,13 +3,16 @@ import re
 sys.path.insert(1, os.path.abspath(".."))
 import Leap
 import boto3
+import Credentials
+
+my_credentials = Credentials.Credentials()
 
 sqs = boto3.client('sqs', region_name = 'us-east-2',
-                    aws_access_key_id="AKIA3QP7SNLSF45B2CF2", 
-                    aws_secret_access_key="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")
+                    aws_access_key_id=my_credentials.AWS_ACCESS_KEY_ID, 
+                    aws_secret_access_key=my_credentials.SECRET_ACCESS_KEY)
 
-queue = sqs.get_queue_url(QueueName='LeapMotionQueue.fifo',
-                            QueueOwnerAWSAccountId='791346834148')
+queue = sqs.get_queue_url(QueueName=my_credentials.lmq_name,
+                            QueueOwnerAWSAccountId=my_credentials.OWNER_ID)
 
 class SampleListener(Leap.Listener):
 
@@ -44,10 +47,9 @@ def main():
     try:
         sys.stdin.readline()
         while True:
-            # leap_data = ("Frame id: %d, timestamp: %d, hands: %d, fingers: %d" % (
-            # frame.id, frame.timestamp, len(frame.hands), len(frame.fingers)))
             response = sqs.send_message(QueueUrl= queue['QueueUrl'], 
-                                        MessageBody= frame, 
+                                        MessageBody= ("Frame id: %d, timestamp: %d, hands: %d, fingers: %d" % (
+                                        frame.id, frame.timestamp, len(frame.hands), len(frame.fingers))), 
                                         MessageGroupId='testing_leap_data')
             print("Message send response : {} ".format(response))
     except KeyboardInterrupt:
