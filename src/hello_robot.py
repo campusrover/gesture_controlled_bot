@@ -4,6 +4,11 @@ sys.path.insert(1, os.path.abspath(".."))
 import Leap
 import boto3
 import Credentials
+from datetime import datetime
+import json
+import logging
+
+
 
 my_credentials = Credentials.Credentials()
 
@@ -14,17 +19,43 @@ sqs = boto3.client('sqs', region_name = 'us-east-2',
 queue = sqs.get_queue_url(QueueName=my_credentials.lmq_name,
                             QueueOwnerAWSAccountId=my_credentials.OWNER_ID)
 
-class SampleListener(Leap.Listener):
+class LeapListener(Leap.Listener):
 
     def on_connect(self, controller):
         print("Connected")
 
     def on_frame(self, controller):
-        global frame
         frame = controller.frame()
-        print("Frame id: %d, timestamp: %d, hands: %d, fingers: %d" % (
-            frame.id, frame.timestamp, len(frame.hands), len(frame.fingers)))
-        return frame
+        hand = frame.hands.rightmost
+        position = hand.palm_position
+        velocity = hand.palm_velocity
+        direction = hand.direction
+        hand_side = "Left hand" if hand.is_left else "Right hand or no hand detected"
+        time_visible = hand.time_visible
+        current_time = datetime.now()
+        
+        frame_output = {}
+        frame_output.update({
+                            "Hand Data": { 
+                            "Number of hands":len(frame.hands), 
+                            "Fingers Visible":len(frame.fingers),
+                            "Hand Position": {"x":position.x, "y":position.y, "z":position.z},
+                            "Hand Velocity": {"x":velocity.x, "y":velocity.y, "z":velocity.z},
+                            "Hand Direction":{"x":direction.x, "y":direction.y, "z":direction.z},
+                            "Grab Strength": hand.grab_strength,
+                            "Pinch Strength": hand.pinch_strength,
+                            "Left or Right": hand_side,
+                            "Time Hand Visible": time_visible
+                            }
+                        })
+        for gesture in frame.gestures():
+            if gesture.type is Leap.Gesture.TYPE_CIRCLE:
+                circle = Leap.CircleGesture(gesture)
+                frame_output.update({"Gesture Type": "circle"})
+        frame_output.update({"Frame ID": int(frame.id)})
+        frame_output.update({"Current Time":current_time.strftime("%H:%M:%S")})
+    
+        return frame_output
 
     # TODO: Write this method
     def gesture_changed(self,cur_frame):
@@ -38,20 +69,31 @@ class SampleListener(Leap.Listener):
 
 def main():
     controller = Leap.Controller()
-    listener = SampleListener()
-
+    listener = LeapListener()
     controller.add_listener(listener) 
-    frame = listener.on_frame(controller)
+    frame_output = listener.on_frame(controller)
+
+    # Enabling Gestures
+    controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE)
+    controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
+
+
+
+    logging.basicConfig(filename='sqs_response.log',level=logging.DEBUG)
+
     # Keep this process running until Enter is pressed
     print("Press Enter to quit...")
     try:
-        sys.stdin.readline()
         while True:
-            response = sqs.send_message(QueueUrl= queue['QueueUrl'], 
-                                        MessageBody= ("Frame id: %d, timestamp: %d, hands: %d, fingers: %d" % (
-                                        frame.id, frame.timestamp, len(frame.hands), len(frame.fingers))), 
+            frame_output = listener.on_frame(controller)
+            # 
+            if(frame_output['Frame ID'] % 10 == 0):
+                print(json.dumps(frame_output, indent = 4))
+                print
+                response = sqs.send_message(QueueUrl= queue['QueueUrl'], 
+                                        MessageBody=(str(frame_output)), 
                                         MessageGroupId='testing_leap_data')
-            print("Message send response : {} ".format(response))
+                logging.info("Message send response : {} ".format(response))
     except KeyboardInterrupt:
         pass
     finally:
