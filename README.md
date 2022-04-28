@@ -1,4 +1,6 @@
-# Nazari and Helen's Gesture Controlled Bot Repository
+# Mini Scouter
+#### Personal gesture and Alexa controlled robot
+##### Nazari Tuyo and Helen Lin
 
 ### gesture_controlled_bot
 
