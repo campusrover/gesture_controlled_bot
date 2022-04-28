@@ -1,8 +1,8 @@
 # Mini Scouter
-#### Personal gesture and Alexa controlled robot
-##### Nazari Tuyo and Helen Lin
+Personal gesture and Alexa controlled robot
+Nazari Tuyo and Helen Lin
 
-### gesture_controlled_bot
+### mini_scouter
 
 ## Project Description
 #### Most minimal version of the project, in a real ROS package
