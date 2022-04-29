@@ -1,31 +1,17 @@
 # Mini Scouter
 Personal gesture and Alexa controlled robot
-Nazari Tuyo and Helen Lin
 
-### mini_scouter
+## Team
+Nazari Tuyo nazarituyo@brandeis.edu
+Helen Lin helenlin@brandeis.edu
 
-## Project Description
-#### Most minimal version of the project, in a real ROS package
-- Node that moves the robot forward and detects obstacles using lidar data
-- A node that follows a stop/go command from the leap hand motion device
+## Project Introduction
+Our final project is a mini scouter robot that can be controlled through hand gestures and voice commands. The robot uses a Leap Motion Controller to detect hand gestures and an Alexa to detect voice commands from the user. It then makes actions depedning on the commands it receives from either the Alexa (which takes priority; gestures are paused if a voice command is detected) or the Leap Motion Controller.
 
-#### Write a one page description of your project. Include:
-#### What is your final project, what do you want to demo on showcase day?
-#### What do you hope / expect to learn in doing this?
-#### How would you like it to be evaluated?
-- Put your project as a repository in our Campus Rover Github organization and supply the URL here (?)
+## Project Objective
+The goal of our project was to create a robot that can be used by law enforcement or the military to navigate through before a human does. The robot will be able to take in commands through hand gestures or voice as a way to “scout out” an area.
 
-### What is your final project, what do you want to demo on showcase day?
-Our final project is a seeing-eye dog robot that would follow a person around (possibly based on color to easily identify which object to follow) and identify obstacles near the person using Lidar and/or a camera. The current plan is to have the robot call out the obstacles to the user as it’s moving. In addition, we will include a hand gesture feature using the LEAP motion controller. We’ll be using the hand gestures to control the robot’s movement when it’s in the “hand motion control mode”
 
-LEAP will accurately detect a hand, a fist as long as it’s not completely closed, holding up certain fingers. Specifically, some things we want the robot to recognize; for example, do we want to make it able to cross roads, detect stairs/ledges
-
-Some possible hand gestures:
-- Holding up a certain amount of fingers to do different actions
-- One finger for left, two for right, five for stop, etc.
-Enunciation:
-- Obstacles of course, possibly doorways or openings that someone can enter, stairs, moving obstacles (?)
-- When it is switching between “hand gesture mode” and “auto” mode
 
 
 ### What do you hope / expect to learn in doing this?
