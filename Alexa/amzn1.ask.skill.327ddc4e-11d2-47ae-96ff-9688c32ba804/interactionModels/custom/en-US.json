@@ -1,0 +1,120 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "mini scout",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": [
+            "stop all movement",
+            "don\u0027t move mini scout"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+            "how do i move mini scout",
+            "i need help with mini scout"
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": [
+            "stop the robot",
+            "stop",
+            "stop mini scout"
+          ]
+        },
+        {
+          "name": "HelloWorldIntent",
+          "slots": [],
+          "samples": [
+            "hello",
+            "how are you",
+            "say hi world",
+            "say hi",
+            "hi",
+            "say hello world",
+            "say hello"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": [
+            "discontinue mini scout movement"
+          ]
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": [
+            "mini scout stop",
+            "mini scout go",
+            "move it"
+          ]
+        },
+        {
+          "name": "Move",
+          "slots": [],
+          "samples": [
+            "move mini scout",
+            "move"
+          ]
+        },
+        {
+          "name": "MoveForward",
+          "slots": [
+            {
+              "name": "duration",
+              "type": "AMAZON.DURATION"
+            }
+          ],
+          "samples": [
+            "move forwards for {duration} seconds",
+            "move forwards a little bit",
+            "move forwards",
+            "move forward a little bit",
+            "move forward {duration} seconds",
+            "move forward"
+          ]
+        },
+        {
+          "name": "MoveBackward",
+          "slots": [
+            {
+              "name": "duration",
+              "type": "AMAZON.DURATION"
+            }
+          ],
+          "samples": [
+            "tell mini scout to move backward",
+            "move backward",
+            "tell mini scout to move backwards",
+            "move backwards for {duration} seconds",
+            "move backwards a little bit",
+            "move backwards"
+          ]
+        },
+        {
+          "name": "RotateLeft",
+          "slots": [],
+          "samples": [
+            "turn left",
+            "turn mini scout left",
+            "rotate mini scout left"
+          ]
+        },
+        {
+          "name": "RotateRight",
+          "slots": [],
+          "samples": [
+            "turn right",
+            "rotate mini scout right",
+            " turn mini scout right"
+          ]
+        }
+      ],
+      "types": []
+    }
+  },
+  "version": "9"
+}
