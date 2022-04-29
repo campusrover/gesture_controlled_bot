@@ -1,9 +1,11 @@
-import os, sys, inspect, _thread, time
-import re
+#!/usr/bin/python2.7
+
+import sys, os
 sys.path.insert(1, os.path.abspath(".."))
-import Leap
+
 import boto3
-import Credentials
+from credentials import Credentials
+from MacOSLeap import Leap
 from datetime import datetime
 import json
 import logging
@@ -28,11 +30,12 @@ class LeapListener(Leap.Listener):
         position = hand.palm_position
         velocity = hand.palm_velocity
         direction = hand.direction
-        hand_side = "Left hand" if hand.is_left else "Right hand or no hand detected"
+        hand_side = "Left hand" if hand.is_left else "Right hand"
         time_visible = hand.time_visible
         current_time = datetime.now()
         
         frame_output = {}
+        frame_output.update({"Motion Input": "Leap Controller"})
         frame_output.update({
                             "Hand Data": { 
                             "Number of hands":len(frame.hands), 
@@ -42,6 +45,7 @@ class LeapListener(Leap.Listener):
                             "Hand Direction":{"x":direction.x, "y":direction.y, "z":direction.z},
                             "Grab Strength": hand.grab_strength,
                             "Pinch Strength": hand.pinch_strength,
+                            "Pitch": hand.direction.pitch,
                             "Left or Right": hand_side,
                             "Time Hand Visible": time_visible
                             }
@@ -50,7 +54,7 @@ class LeapListener(Leap.Listener):
             if gesture.type is Leap.Gesture.TYPE_SWIPE:
                 swipe = Leap.SwipeGesture(gesture)
                 frame_output.update({"Gesture": {"type": "swipe"}})
-            else if gesture.type is Leap.Gesture.TYPE_CIRCLE:
+            elif gesture.type is Leap.Gesture.TYPE_CIRCLE:
                 circle = Leap.CircleGesture(gesture)
                 isClockwise = False
                 if (circle.pointable.direction.angle_to(circle.normal) <= Leap.PI/2):
@@ -62,18 +66,10 @@ class LeapListener(Leap.Listener):
         frame_output.update({"Current Time":current_time.strftime("%H:%M:%S")})
     
         return frame_output
-
-    # TODO: Write this method
-    def gesture_changed(self,cur_frame):
-        if len(frame.fingers) != len(cur_frame.fingers):
-            return True
-        elif len(frame.hands) != len(cur_frame.hands):
-            return True
-        else:
-            return False
     
 
 def main():
+    controller = Leap.Controller()
     listener = LeapListener()
     controller.add_listener(listener) 
     frame_output = listener.on_frame(controller)
@@ -82,28 +78,25 @@ def main():
     controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE)
     controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
 
-
-
-    logging.basicConfig(filename='sqs_response.log',level=logging.DEBUG)
+    logging.basicConfig(filename='logs/sqs_response.log',level=logging.DEBUG)
 
     # Keep this process running until Enter is pressed
-    print("Press Enter to quit...")
+    print("Receiving Data From Leap Motion Controller")
     try:
         while True:
             frame_output = listener.on_frame(controller)
-            # 
             if(frame_output['Frame ID'] % 10 == 0):
-                print(json.dumps(frame_output, indent = 4))
-                print
+                # print(json.dumps(frame_output, indent = 4))
+                # print
                 response = sqs.send_message(QueueUrl= queue['QueueUrl'], 
                                         MessageBody=(str(frame_output)), 
                                         MessageGroupId='testing_leap_data')
-                logging.info("Message send response : {} ".format(response))
+                logging.info(frame_output)
     except KeyboardInterrupt:
         pass
     finally:
-        # Remove the sample listener when done
         controller.remove_listener(listener)
+
 
 if __name__ == "__main__":
     main()
