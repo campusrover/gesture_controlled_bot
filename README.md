@@ -15,14 +15,15 @@ The goal of our project was to create a robot that can be used by law enforcemen
 ### Local
 - A connection is set up between the Leap Motion Controller and the computer via Leap’s Software in a local script
 - AWS boto3 is used to connect to our SQS and push messages containing controller data to the queue in this script for VNC access
-#### Challenges
 
 ### VNC
+- Calculates the pitch of the hand to move forward/backward
+- Uses circle gesture for rotation; clockwise to turn right and counterclockwise to turn left
+- Can use two hands to affect two different aspects of movement (direction with right hand and speed with left hand)
 
+### Future Plans
 
-
-
-
+### Conclusion
 
 ### What do you hope / expect to learn in doing this?
 
