@@ -47,7 +47,7 @@ def sqs_connector():
                     ],
                     MaxNumberOfMessages=1,
                     VisibilityTimeout=15,
-                    WaitTimeSeconds=20
+                    WaitTimeSeconds=1
                 )
 
     # Converting string message from queue to dictionary
