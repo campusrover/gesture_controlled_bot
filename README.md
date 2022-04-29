@@ -21,11 +21,11 @@ The goal of our project was to create a robot that can be used by law enforcemen
 - Uses circle gesture for rotation; clockwise to turn right and counterclockwise to turn left
 - Can use two hands to affect two different aspects of movement (direction with right hand and speed with left hand)
 
-### Future Plans
+## Future Plans
 
-### Conclusion
+## Conclusion
 
-### What do you hope / expect to learn in doing this?
+## What do you hope / expect to learn in doing this?
 
 We hope to become more familiar with working with LIDAR and camera data since a lot of our project will be looking at scans and figuring out what they mean. Additionally, we will be using a LEAP motion sensor to detect hand motions. We expect to get fairly familiar with the LEAP ROS package and translating LEAP data to be used in our programs. Finally, we hope to get a better understanding of how a robot interacts with the environment/real world and any challenges that may come with that. 
 
