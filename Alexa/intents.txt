@@ -1,0 +1,50 @@
+Change the intents so that they contain the following:
+
+AMAZON.CancelIntent
+ask mini scout to stop moving
+ask mini scout to stop
+stop moving mini scout
+stop mini scout
+
+AMAZON.HelpIntent
+how do i move mini scout
+i need help with mini scout
+
+AMAZON.StopIntent
+exit mini scout navigation
+exit mini scout
+
+AMAZON.NavigateHomeIntent
+discontinue mini scout movement
+
+AMAZON.FallbackIntent
+mini scout stop
+mini scout go
+move it
+
+Move Intent
+move
+
+MoveForward Intent
+ask mini scout to move forwards
+move forward
+move forwards a little bit
+move forwards
+move forward a little bit
+
+MoveBackward Intent
+tell mini scout to move backward
+move backward
+tell mini scout to move backwards
+move backwards a little bit
+move backwards
+
+RotateLeft Intent
+rotate mini scout left
+turn mini scout left
+rotate left
+
+RotateRight Intent
+rotate mini scout right
+turn mini scout right
+rotate right

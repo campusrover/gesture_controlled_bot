@@ -8,6 +8,7 @@ import logging
 import boto3
 import ask_sdk_core.utils as ask_utils
 import Credentials
+from datetime import datetime
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
@@ -25,7 +26,7 @@ sqs = boto3.client('sqs', region_name = 'us-east-2',
                     aws_access_key_id=my_credentials.AWS_ACCESS_KEY_ID, 
                     aws_secret_access_key=my_credentials.SECRET_ACCESS_KEY)
 
-queue = sqs.get_queue_url(QueueName=my_credentials.lmq_name,
+queue = sqs.get_queue_url(QueueName=my_credentials.vcq_name,
                             QueueOwnerAWSAccountId=my_credentials.OWNER_ID)
 
 class LaunchRequestHandler(AbstractRequestHandler):
@@ -54,7 +55,8 @@ class MoveIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         speak_output = "moving"
         intent_name = ask_utils.get_intent_name(handler_input)
-        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name}
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
         sqs.send_message(QueueUrl= queue['QueueUrl'],
                                     MessageBody= str(sqs_message), 
                                     MessageGroupId='testing_voice_data')
@@ -75,7 +77,8 @@ class MoveForwardIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         speak_output = "moving mini scout forward"
         intent_name = ask_utils.get_intent_name(handler_input)
-        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name}
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
         sqs.send_message(QueueUrl= queue['QueueUrl'],
                                     MessageBody= str(sqs_message), 
                                     MessageGroupId='testing_voice_data')
@@ -96,11 +99,11 @@ class RotateLeftIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         speak_output = "turning mini scout left"
         intent_name = ask_utils.get_intent_name(handler_input)
-        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name}
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
         sqs.send_message(QueueUrl= queue['QueueUrl'],
                                     MessageBody= str(sqs_message), 
                                     MessageGroupId='testing_voice_data')
-
         return (
             handler_input.response_builder
                 .speak(speak_output)
@@ -118,11 +121,11 @@ class RotateRightIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         speak_output = "turning mini scout right"
         intent_name = ask_utils.get_intent_name(handler_input)
-        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name}
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
         sqs.send_message(QueueUrl= queue['QueueUrl'],
                                     MessageBody= str(sqs_message), 
                                     MessageGroupId='testing_voice_data')
-
         return (
             handler_input.response_builder
                 .speak(speak_output)
@@ -140,11 +143,11 @@ class MoveBackwardIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         speak_output = "moving mini scout backwards"
         intent_name = ask_utils.get_intent_name(handler_input)
-        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name}
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
         sqs.send_message(QueueUrl= queue['QueueUrl'],
                                     MessageBody= str(sqs_message), 
                                     MessageGroupId='testing_voice_data')
-
         return (
             handler_input.response_builder
                 .speak(speak_output)
@@ -161,7 +164,12 @@ class HelpIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         speak_output = "here are some things you can say: move forward or move backwards"
-
+        # intent_name = ask_utils.get_intent_name(handler_input)
+        # current_time = datetime.now()
+        # sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
+        # sqs.send_message(QueueUrl= queue['QueueUrl'],
+        #                             MessageBody= str(sqs_message), 
+        #                             MessageGroupId='testing_voice_data')
         return (
             handler_input.response_builder
                 .speak(speak_output)
@@ -178,8 +186,13 @@ class CancelIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = ""
-
+        speak_output = "stopping"
+        intent_name = ask_utils.get_intent_name(handler_input)
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
+        sqs.send_message(QueueUrl= queue['QueueUrl'],
+                                    MessageBody= str(sqs_message), 
+                                    MessageGroupId='testing_voice_data')
         return (
             handler_input.response_builder
                 .speak(speak_output)
@@ -196,7 +209,8 @@ class StopIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         speak_output = "stopping"
         intent_name = ask_utils.get_intent_name(handler_input)
-        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name}
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
         sqs.send_message(QueueUrl= queue['QueueUrl'],
                                     MessageBody= str(sqs_message), 
                                     MessageGroupId='testing_voice_data')
@@ -211,13 +225,13 @@ class FallbackIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return ask_utils.is_intent_name("AMAZON.FallbackIntent")(handler_input)
-
+    
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         logger.info("In FallbackIntentHandler")
         speech = "i'm not sure what movement you meant."
         reprompt = "I didn't get that. What would you like me to do?"
-
+        
         return handler_input.response_builder.speak(speech).ask(reprompt).response
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
@@ -248,7 +262,8 @@ class IntentReflectorHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         intent_name = ask_utils.get_intent_name(handler_input)
         speak_output = "You just triggered " + intent_name + "."
-        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name}
+        current_time = datetime.now()
+        sqs_message = {"Motion Input": "Alexa", "Intent": intent_name, "Current Time":current_time.strftime("%H:%M:%S")}
         sqs.send_message(QueueUrl= queue['QueueUrl'],
                                     MessageBody= str(sqs_message), 
                                     MessageGroupId='testing_voice_data')

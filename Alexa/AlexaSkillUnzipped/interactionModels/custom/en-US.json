@@ -6,8 +6,10 @@
         {
           "name": "AMAZON.CancelIntent",
           "samples": [
-            "stop all movement",
-            "don\u0027t move mini scout"
+            "ask mini scout to stop moving",
+            "ask mini scout to stop",
+            "stop moving mini scout",
+            "stop mini scout"
           ]
         },
         {
@@ -20,9 +22,8 @@
         {
           "name": "AMAZON.StopIntent",
           "samples": [
-            "stop the robot",
-            "stop",
-            "stop mini scout"
+            "exit mini scout navigation",
+            "exit mini scout"
           ]
         },
         {
@@ -56,7 +57,6 @@
           "name": "Move",
           "slots": [],
           "samples": [
-            "move mini scout",
             "move"
           ]
         },
@@ -111,10 +111,19 @@
             "rotate mini scout right",
             " turn mini scout right"
           ]
+        },
+        {
+          "name": "DoASpin",
+          "slots": [],
+          "samples": [
+            "do a spin",
+            "mini scout spin",
+            "spin for me"
+          ]
         }
       ],
       "types": []
     }
   },
-  "version": "9"
+  "version": "13"
 }
