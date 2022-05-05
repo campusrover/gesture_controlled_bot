@@ -2,8 +2,8 @@
 
 import boto3
 import json
-from teleop import MiniScoutAlexa
-from teleop import MiniScoutLeap
+from teleop import MiniScoutAlexaTelep
+from teleop import MiniScoutLeapTelep
 from sqs import sqs_connector
 import rospy
 import time
@@ -16,8 +16,8 @@ rate = rospy.Rate(10)
 cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 twist = Twist()
 # alexa and leap teleop teleop
-alexa = MiniScoutAlexa.MiniScoutAlexaTeleop()
-leap = MiniScoutLeap.MiniScoutLeapTeleop()
+alexa = MiniScoutAlexaTelep.MiniScoutAlexaTeleop()
+leap = MiniScoutLeapTeleop.MiniScoutLeapTeleop()
 
 # teleop message to stop the robot
 stop_teleop = Twist()
