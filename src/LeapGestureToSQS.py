@@ -7,7 +7,6 @@ import boto3
 from credentials import Credentials
 from MacOSLeap import Leap
 from datetime import datetime
-import json
 
 my_credentials = Credentials.Credentials()
 
