@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(src_dir, arch_dir)))
 
 import boto3
 from credentials import Credentials
-from Windows import Leap
+from WindowsLeap import Leap
 from datetime import datetime
 import json
 import logging
