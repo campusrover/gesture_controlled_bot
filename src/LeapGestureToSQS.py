@@ -115,7 +115,7 @@ def main():
     # Enabling Gestures
     controller.enable_gesture(Leap.Gesture.TYPE_CIRCLE)
     controller.enable_gesture(Leap.Gesture.TYPE_SWIPE)
-    pastMotion = listener.currMotion
+    pastMotion = 'Stop'
 
     #logging.basicConfig(filename='logs/sqs_response.log',level=logging.DEBUG)
 
@@ -131,7 +131,7 @@ def main():
                 print('past motion: %s'%pastMotion)
                 # update motion if different from past motion
                 pastMotion = currMotion['Motion']
-                print('new motion: %s'%currMotion)
+                print('new motion: %s'%currMotion['Motion'])
                 # print(json.dumps(frame_output, indent = 4))
                 # print
                 response = sqs.send_message(QueueUrl= queue['QueueUrl'], 
@@ -147,3 +147,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
