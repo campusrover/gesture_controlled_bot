@@ -7,6 +7,7 @@ import boto3
 from credentials import Credentials
 from MacOSLeap import Leap
 from datetime import datetime
+import time
 
 my_credentials = Credentials.Credentials()
 
@@ -73,29 +74,31 @@ class LeapListener(Leap.Listener):
     def getMotion(self, frame):
     
         pitch = frame['Hand Data']['Pitch']
+        time_in_frame = frame['Hand Data']['Time Hand Visible']
         #print(pitch)
         #print(frame['Hand Data']['Grab Strength'])
+        if time_in_frame > 2:
+            # check if is a gesture
+            if 'Gesture' in frame:
+                #if frame['Gesture']['type'] == 'swipe':
+                    #self.currMotion = 'Swipe'
+                if frame['Gesture']['type'] == 'circle':
+                    # circle is clockwise
+                    if frame['Gesture']['isClockwise']:
+                        self.currMotion = 'Turn right'
+                    # circle is counterclockwise
+                    else:
+                        self.currMotion = 'Turn left'
+            # if pitch is low, move forward
+            elif pitch < 1 and pitch > 0.4:
+                self.currMotion = 'Move forward'
+            # if pitch is high, move backward
+            elif pitch < -0.5:
+                self.currMotion = 'Move backward'
+            # grab strength is 1 (hand is fist), stop all movement
+            elif frame['Hand Data']['Grab Strength'] > 0.75:
+                self.currMotion = 'Stop'
         
-        # check if is a gesture
-        if 'Gesture' in frame:
-            #if frame['Gesture']['type'] == 'swipe':
-                #self.currMotion = 'Swipe'
-            if frame['Gesture']['type'] == 'circle':
-                # circle is clockwise
-                if frame['Gesture']['isClockwise']:
-                    self.currMotion = 'Turn right'
-                # circle is counterclockwise
-                else:
-                    self.currMotion = 'Turn left'
-        # if pitch is low, move forward
-        elif pitch < 2.5 and pitch > 0:
-            self.currMotion = 'Move forward'
-        # if pitch is high, move backward
-        elif pitch < -2.4:
-            self.currMotion = 'Move backward'
-        # grab strength is 1 (hand is fist), stop all movement
-        elif frame['Hand Data']['Grab Strength'] > 0.75:
-            self.currMotion = 'Stop'
     
 
 def main():
@@ -122,7 +125,8 @@ def main():
                 AttributeNames=['ApproximateNumberOfMessages'])
             num_of_messages = int(queue_response['Attributes']['ApproximateNumberOfMessages'])
             currMotion = listener.on_frame(controller)
-            if num_of_messages == 0 and currMotion['Motion'] != pastMotion:
+                        # if num_of_messages == 0 and currMotion['Motion'] != pastMotion:
+            if currMotion['Motion'] != pastMotion:
                 print('past motion: %s'%pastMotion)
                 # update motion if different from past motion
                 pastMotion = currMotion['Motion']
