@@ -2,8 +2,8 @@
 
 import boto3
 import json
-from teleop import MiniScoutAlexaTelep
-from teleop import MiniScoutLeapTelep
+from teleop import MiniScoutAlexaTeleop
+from teleop import MiniScoutLeapTeleop
 from sqs import sqs_connector
 import rospy
 import time
@@ -16,7 +16,7 @@ rate = rospy.Rate(10)
 cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 twist = Twist()
 # alexa and leap teleop teleop
-alexa = MiniScoutAlexaTelep.MiniScoutAlexaTeleop()
+alexa = MiniScoutAlexaTeleop.MiniScoutAlexaTeleop()
 leap = MiniScoutLeapTeleop.MiniScoutLeapTeleop()
 
 # teleop message to stop the robot
@@ -63,7 +63,7 @@ def main():
                 # if following alexa, run a while loop that checks for new messages as the robot is moving
                 if follow_alexa == True:
                     cmd_vel.publish(stop_teleop)
-                    time.sleep(2)
+                    time.sleep(1.8)
                     print("Queue has msg: " + str(queue_connector.has_message('alexa')))
                     while not queue_connector.has_message('alexa'):
                         cmd_vel.publish(alexa.motion(msg))
@@ -83,12 +83,18 @@ def main():
                         cmd_vel.publish(stop_teleop)
                         follow_alexa = True
                         print("Stopping Movement and Exiting Leap")
+                    elif msg['Motion'] == 'Stop':
+                        cmd_vel.publish(leap.motion(msg))
+                        follow_leap = False
+                        print("Stopping Movement and Exiting")
+                        time.sleep(2)
                     else: 
                         cmd_vel.publish(stop_teleop)
                         time.sleep(2)
-                        while not queue_connector.has_message('leap'):
+                        while not queue_connector.has_message('leap') and not queue_connector.has_message('alexa'):
                             cmd_vel.publish(leap.motion(msg))
                             print("Published command")
+                        cmd_vel.publish(stop_teleop)
         # a final conditional in the case that both queues were empty
         else:
             if queue_connector.has_message('alexa'):

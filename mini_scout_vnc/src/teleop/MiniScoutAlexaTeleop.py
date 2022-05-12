@@ -24,12 +24,12 @@ class MiniScoutAlexaTeleop:
                 return twist
             elif msg["Intent"] == "RotateLeft":
                 twist.linear.x = 0
-                twist.angular.z = 0.2
+                twist.angular.z = 0.4
                 # print("Rotate Left")
                 return twist
             elif msg["Intent"] == "RotateRight":
                 twist.linear.x = 0
-                twist.angular.z = -0.2
+                twist.angular.z = -0.4
                 # print("Rotate Right")
                 return twist
             elif msg["Intent"] == "AMAZON.CancelIntent":
